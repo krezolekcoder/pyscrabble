@@ -26,10 +26,8 @@ DOUBLE_LETTER_SCORE_COORDS = ((3, 0), (11, 0),
 
 
 
+
 def scrabble_engine_get_list_of_coords(word: str, start_coords : list):
-
-    word_len = len(word)
-
     coords_dir = np.asarray(start_coords[1]) - np.asarray(start_coords[0])
 
     if 0 not in coords_dir or (coords_dir[0] > 1 or coords_dir[1] > 1):
@@ -38,9 +36,13 @@ def scrabble_engine_get_list_of_coords(word: str, start_coords : list):
     coords_list = []
 
     for coord in range (0, len(word)):
-        
         new_coord = np.asarray(np.asarray(start_coords[0]) + coord * coords_dir)
         coords_list.append(new_coord)
 
     return coords_list 
+
+
+def scrabble_engine_calculate_score(word:str, start_coords : list):
+
+    return 0 
 
