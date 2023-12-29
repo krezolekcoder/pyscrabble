@@ -1,4 +1,5 @@
 import numpy as np
+import json
 
 TRIPLE_WORD_SCORE_COORDS = ((0, 0), (7, 0), (14, 0), 
                            (0, 7), (14, 7),
@@ -25,24 +26,54 @@ DOUBLE_LETTER_SCORE_COORDS = ((3, 0), (11, 0),
                               (3, 14), (11, 14))
 
 
+class ScrabbleGame():
 
-
-def scrabble_engine_get_list_of_coords(word: str, start_coords : list):
-    coords_dir = np.asarray(start_coords[1]) - np.asarray(start_coords[0])
-
-    if 0 not in coords_dir or (coords_dir[0] > 1 or coords_dir[1] > 1):
-        raise ValueError('Wrong start coords')
+    def __init__(self, json_config_path : str):
+        with open(json_config_path, 'r', encoding='utf-8') as file:
+            # Load the JSON data
+            self.config = json.load(file)
     
-    coords_list = []
+    def calculate_score(self, word:str, start_coords : list[int, int]):
+        
+        coords_list = self.get_list_of_coords(word, start_coords) 
 
-    for coord in range (0, len(word)):
-        new_coord = np.asarray(np.asarray(start_coords[0]) + coord * coords_dir)
-        coords_list.append(new_coord)
+        score = 0
 
-    return coords_list 
+        for coord, letter in zip(coords_list, word):
+            letter_score = self.config["tiles_score"][letter]
+
+            for dbl_coord in DOUBLE_LETTER_SCORE_COORDS :
+                converted_coord = np.array([dbl_coord])[0]
+
+                if converted_coord[0] == coord[0] and converted_coord[1] == coord[1]:
+                    print('Double letter score')
+                    letter_score *= 2
+
+            for trp_coord in TRIPLE_LETTER_SCORE_COORDS:
+                converted_coord = np.array([trp_coord])[0]
+
+                if converted_coord[0] == coord[0] and converted_coord[1] == coord[1]:
+                    print('Triple letter score')
+                    letter_score *= 3
+            
+
+            score += letter_score
 
 
-def scrabble_engine_calculate_score(word:str, start_coords : list):
 
-    return 0 
+        return score
 
+    def get_list_of_coords(self, word: str, start_coords: list):
+        coords_dir = np.asarray(start_coords[1]) - np.asarray(start_coords[0])
+
+        if 0 not in coords_dir or (coords_dir[0] > 1 or coords_dir[1] > 1):
+            raise ValueError('Wrong start coords')
+        
+        coords_list = []
+
+        for coord in range (0, len(word)):
+            new_coord = np.asarray(np.asarray(start_coords[0]) + coord * coords_dir)
+            coords_list.append(new_coord)
+
+        return coords_list 
+        
