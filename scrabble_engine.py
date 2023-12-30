@@ -26,12 +26,33 @@ DOUBLE_LETTER_SCORE_COORDS = ((3, 0), (11, 0),
                               (3, 14), (11, 14))
 
 
+TILE_DL_COLOR = (173, 216, 230)   # Light Blue (Sky Blue)
+TILE_TL_COLOR = (0, 0, 128)        # Deep Blue (Navy Blue)
+TILE_DW_COLOR = (255, 182, 193)     # Light Red (Light Pink)
+TILE_TW_COLOR = (139, 0, 0)          # Deep Red (Dark Red)
+TILE_DEFAULT_COLOR = (255, 255, 255) # white 
+ 
 class ScrabbleGame():
 
     def __init__(self, json_config_path : str):
         with open(json_config_path, 'r', encoding='utf-8') as file:
             # Load the JSON data
             self.config = json.load(file)
+
+        self.score_matrix = [[TILE_DEFAULT_COLOR for _ in range(15)] for _ in range(15)]
+
+        for coord in TRIPLE_WORD_SCORE_COORDS:
+            self.score_matrix[coord[0]][coord[1]] = TILE_TW_COLOR
+
+        for coord in DOUBLE_WORD_SCORE_COORDS:
+            self.score_matrix[coord[0]][coord[1]] = TILE_DW_COLOR
+        
+        for coord in TRIPLE_LETTER_SCORE_COORDS:
+            self.score_matrix[coord[0]][coord[1]] = TILE_TL_COLOR
+
+        for coord in DOUBLE_LETTER_SCORE_COORDS:
+            self.score_matrix[coord[0]][coord[1]] = TILE_DL_COLOR
+
     
     def calculate_score(self, word:str, start_coords : list[int, int]):
         
