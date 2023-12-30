@@ -39,19 +39,24 @@ class ScrabbleGame():
             # Load the JSON data
             self.config = json.load(file)
 
-        self.score_matrix = [[TILE_DEFAULT_COLOR for _ in range(15)] for _ in range(15)]
+        self.color_matrix = [[TILE_DEFAULT_COLOR for _ in range(15)] for _ in range(15)]
+        self.score_mult = [[("N", 1) for _ in range(15)] for _ in range(15)]
 
         for coord in TRIPLE_WORD_SCORE_COORDS:
-            self.score_matrix[coord[0]][coord[1]] = TILE_TW_COLOR
+            self.color_matrix[coord[0]][coord[1]] = TILE_TW_COLOR
+            self.score_mult[coord[0]][coord[1]] = ("W", 3)
 
         for coord in DOUBLE_WORD_SCORE_COORDS:
-            self.score_matrix[coord[0]][coord[1]] = TILE_DW_COLOR
+            self.color_matrix[coord[0]][coord[1]] = TILE_DW_COLOR
+            self.score_mult[coord[0]][coord[1]] = ("W", 2)
         
         for coord in TRIPLE_LETTER_SCORE_COORDS:
-            self.score_matrix[coord[0]][coord[1]] = TILE_TL_COLOR
+            self.color_matrix[coord[0]][coord[1]] = TILE_TL_COLOR
+            self.score_mult[coord[0]][coord[1]] = ("L", 3)
 
         for coord in DOUBLE_LETTER_SCORE_COORDS:
-            self.score_matrix[coord[0]][coord[1]] = TILE_DL_COLOR
+            self.color_matrix[coord[0]][coord[1]] = TILE_DL_COLOR
+            self.score_mult[coord[0]][coord[1]] = ("L", 2)
 
     
     def calculate_score(self, word:str, start_coords : list[int, int]):
@@ -60,27 +65,22 @@ class ScrabbleGame():
 
         score = 0
 
+        word_multipliers = []
+
         for coord, letter in zip(coords_list, word):
             letter_score = self.config["tiles_score"][letter]
 
-            for dbl_coord in DOUBLE_LETTER_SCORE_COORDS :
-                converted_coord = np.array([dbl_coord])[0]
+            mult = self.score_mult[coord[0]][coord[1]]
 
-                if converted_coord[0] == coord[0] and converted_coord[1] == coord[1]:
-                    print('Double letter score')
-                    letter_score *= 2
-
-            for trp_coord in TRIPLE_LETTER_SCORE_COORDS:
-                converted_coord = np.array([trp_coord])[0]
-
-                if converted_coord[0] == coord[0] and converted_coord[1] == coord[1]:
-                    print('Triple letter score')
-                    letter_score *= 3
-            
+            if mult[0] == "L":
+                letter_score *= mult[1]
+            elif mult[0] == "W":
+                word_multipliers.append(mult)
 
             score += letter_score
 
-
+        for mult in word_multipliers:
+            score *= mult[1]
 
         return score
 

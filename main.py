@@ -52,7 +52,8 @@ if __name__ == "__main__":
     font_size = 60
     font = pygame.font.Font(None, font_size)
 
-    word_surfaces = create_word_surfaces("SCRABBLE", [5,5], "DOWN")
+    word_surfaces = create_word_surfaces("TALLIN MARZEC", [7,0], "DOWN")
+
 
     # Game loop
     while True:
@@ -83,5 +84,7 @@ if __name__ == "__main__":
 
             rect = surface.get_rect(center=((coord[0] * tile_size) + tile_size/2, (coord[1] * tile_size) + tile_size/2))
             screen.blit(surface, rect)
+
+
         # Update the display
         pygame.display.flip()
