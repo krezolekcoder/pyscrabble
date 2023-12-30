@@ -10,7 +10,7 @@ def get_tile_clicked_coords(mouse_x : int, mouse_y: int, tile_size : int) -> (in
 
 # function that will create pygame surfaces for given word , starting coord and heading 
 
-def create_word_surfaces(word: str, start_coord : [int, int], heading:list[int, int]) -> list:
+def create_word_surfaces(word: str, start_coord : tuple[int, int], heading:tuple[int, int]) -> list:
 
     if 0 not in heading or (heading[0] > 1 or heading[1] > 1):
             raise ValueError('Wrong heading')
@@ -60,7 +60,7 @@ if __name__ == "__main__":
     font_size = 60
     font = pygame.font.Font(None, font_size)
 
-    word_surfaces = create_word_surfaces("SCRABBLE", [3,7], [1,0])
+    word_surfaces = create_word_surfaces("SCRABBLE", (3,7), (1,0))
 
 
     # Game loop

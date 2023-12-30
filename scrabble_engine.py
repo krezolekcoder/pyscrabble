@@ -59,9 +59,9 @@ class ScrabbleGame():
             self.score_mult[coord[0]][coord[1]] = ("L", 2)
 
     
-    def calculate_score(self, word:str, start_coords : list[int, int]):
+    def calculate_score(self, word:str, start_coord : tuple[int, int], heading : tuple[int, int]):
         
-        coords_list = self.get_list_of_coords(word, start_coords) 
+        coords_list = self.get_list_of_coords(word, start_coord, heading) 
 
         score = 0
 
@@ -84,17 +84,21 @@ class ScrabbleGame():
 
         return score
 
-    def get_list_of_coords(self, word: str, start_coords: list):
-        coords_dir = np.asarray(start_coords[1]) - np.asarray(start_coords[0])
-
-        if 0 not in coords_dir or (coords_dir[0] > 1 or coords_dir[1] > 1):
-            raise ValueError('Wrong start coords')
+    def get_list_of_coords(self, word: str, start_coord: tuple[int, int], heading: tuple[int, int]):
         
+        if 0 not in heading or (heading[0] > 1 or heading[1] > 1):
+            raise ValueError('Wrong heading')
+        
+        ## add check if word fits in board with given start coord, len and heading 
+
         coords_list = []
 
         for coord in range (0, len(word)):
-            new_coord = np.asarray(np.asarray(start_coords[0]) + coord * coords_dir)
-            coords_list.append(new_coord)
+
+            x = start_coord[0] + coord * heading[0]
+            y = start_coord[1] + coord * heading[1]
+
+            # new_coord = np.asarray(np.asarray(start_coords[0]) + coord * coords_dir)
+            coords_list.append((x, y))
 
         return coords_list 
-        
