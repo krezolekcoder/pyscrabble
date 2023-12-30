@@ -6,7 +6,7 @@ TRIPLE_WORD_SCORE_COORDS = ((0, 0), (7, 0), (14, 0),
                            (0, 14), (7, 14), (14, 14))
 
 DOUBLE_WORD_SCORE_COORDS = ((1, 1), (2, 2), (3, 3), (4, 4),
-                            (14, 1), (13, 2), (12, 3), (11, 4),
+                            (13, 1), (12, 2), (11, 3), (10, 4),
                             (4, 10), (3, 11), (2, 12), (1, 13),
                             (13, 13), (12, 12), (11, 11), (10, 10))
 
@@ -27,9 +27,9 @@ DOUBLE_LETTER_SCORE_COORDS = ((3, 0), (11, 0),
 
 
 TILE_DL_COLOR = (173, 216, 230)   # Light Blue (Sky Blue)
-TILE_TL_COLOR = (0, 0, 128)        # Deep Blue (Navy Blue)
+TILE_TL_COLOR =  (70, 130, 180)    # Deep Blue (Navy Blue)
 TILE_DW_COLOR = (255, 182, 193)     # Light Red (Light Pink)
-TILE_TW_COLOR = (139, 0, 0)          # Deep Red (Dark Red)
+TILE_TW_COLOR = (220, 20, 60)          # Deep Red (Dark Red)
 TILE_DEFAULT_COLOR = (255, 255, 255) # white 
  
 class ScrabbleGame():
