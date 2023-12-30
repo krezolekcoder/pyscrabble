@@ -10,7 +10,10 @@ def get_tile_clicked_coords(mouse_x : int, mouse_y: int, tile_size : int) -> (in
 
 # function that will create pygame surfaces for given word , starting coord and heading 
 
-def create_word_surfaces(word: str, start_coord : [int, int], heading:str) -> list:
+def create_word_surfaces(word: str, start_coord : [int, int], heading:list[int, int]) -> list:
+
+    if 0 not in heading or (heading[0] > 1 or heading[1] > 1):
+            raise ValueError('Wrong heading')
 
     surfaces = []
     coords = start_coord 
@@ -18,9 +21,14 @@ def create_word_surfaces(word: str, start_coord : [int, int], heading:str) -> li
     for idx, letter in enumerate(word):
 
         surface = font.render(letter, True, black)
-        coord = (start_coord[0], start_coord[1] + idx)
+        
+        x = start_coord[0] + idx * heading[0]
+        y = start_coord[1] + idx * heading[1]
 
-        surfaces.append((surface, coord))
+        if x >= 0 and x < 15 and y >= 0 and y < 15:
+            coord = (start_coord[0] + idx * heading[0] , start_coord[1] + idx * heading[1])
+
+            surfaces.append((surface, coord))
 
     return surfaces
 
@@ -52,7 +60,7 @@ if __name__ == "__main__":
     font_size = 60
     font = pygame.font.Font(None, font_size)
 
-    word_surfaces = create_word_surfaces("TALLIN MARZEC", [7,0], "DOWN")
+    word_surfaces = create_word_surfaces("SCRABBLE", [3,7], [1,0])
 
 
     # Game loop
@@ -73,7 +81,7 @@ if __name__ == "__main__":
                 x = col * tile_size
                 y = row * tile_size
 
-                color = scrabble.score_matrix[row][col]
+                color = scrabble.color_matrix[row][col]
                 
                 # Draw the tiles
                 pygame.draw.rect(screen, color, (x, y, tile_size, tile_size))

@@ -70,17 +70,17 @@ class ScrabbleGame():
         for coord, letter in zip(coords_list, word):
             letter_score = self.config["tiles_score"][letter]
 
-            mult = self.score_mult[coord[0]][coord[1]]
+            mult_type, mult_value = self.score_mult[coord[0]][coord[1]]
 
-            if mult[0] == "L":
-                letter_score *= mult[1]
-            elif mult[0] == "W":
-                word_multipliers.append(mult)
+            if mult_type == "L":
+                letter_score *= mult_value
+            elif mult_type == "W":
+                word_multipliers.append(mult_value)
 
             score += letter_score
 
         for mult in word_multipliers:
-            score *= mult[1]
+            score *= mult
 
         return score
 
