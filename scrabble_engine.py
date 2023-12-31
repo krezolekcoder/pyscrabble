@@ -41,6 +41,7 @@ class ScrabbleGame():
 
         self.color_matrix = [[TILE_DEFAULT_COLOR for _ in range(15)] for _ in range(15)]
         self.score_mult = [[("N", 1) for _ in range(15)] for _ in range(15)]
+        self.board = [[None for _ in range(15)] for _ in range(15)]
 
         for coord in TRIPLE_WORD_SCORE_COORDS:
             self.color_matrix[coord[0]][coord[1]] = TILE_TW_COLOR
@@ -58,10 +59,22 @@ class ScrabbleGame():
             self.color_matrix[coord[0]][coord[1]] = TILE_DL_COLOR
             self.score_mult[coord[0]][coord[1]] = ("L", 2)
 
-    
+    def set_tile_letter(self, x_pos:int, y_pos:int, letter:str) -> bool:
+
+        if len(letter) != 1:
+            raise ValueError("String with len 1 required")
+        
+        if self.board[x_pos][y_pos] == None:
+            self.board[x_pos][y_pos] = letter
+            return True
+        
+
+    def get_tile_letter(self, x_pos:int, y_pos:int) -> str or None:
+        return self.board[x_pos][y_pos]
+
     def calculate_score(self, word:str, start_coord : tuple[int, int], heading : tuple[int, int]):
         
-        coords_list = self.get_list_of_coords(word, start_coord, heading) 
+        coords_list = self.__get_list_of_coords(word, start_coord, heading) 
 
         score = 0
 
@@ -84,7 +97,7 @@ class ScrabbleGame():
 
         return score
 
-    def get_list_of_coords(self, word: str, start_coord: tuple[int, int], heading: tuple[int, int]):
+    def __get_list_of_coords(self, word: str, start_coord: tuple[int, int], heading: tuple[int, int]):
         
         if 0 not in heading or (heading[0] > 1 or heading[1] > 1):
             raise ValueError('Wrong heading')

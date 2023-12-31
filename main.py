@@ -27,10 +27,14 @@ def create_word_surfaces(word: str, start_coord : tuple[int, int], heading:tuple
 
         if x >= 0 and x < 15 and y >= 0 and y < 15:
             coord = (start_coord[0] + idx * heading[0] , start_coord[1] + idx * heading[1])
-
+            scrabble.set_tile_letter(x, y, letter)
             surfaces.append((surface, coord))
 
     return surfaces
+
+
+
+
 
 
 if __name__ == "__main__":
@@ -63,6 +67,14 @@ if __name__ == "__main__":
     word_surfaces = create_word_surfaces("SCRABBLE", (3,7), (1,0))
 
 
+    # popup rectangle with letters
+    popup_size = 200 
+    popup_color = (255, 0, 0)
+    popup_rect = pygame.Rect(0, 0, popup_size, popup_size)
+    popup_rect.center = screen.get_rect().center
+
+    show_popup = False
+
     # Game loop
     while True:
         for event in pygame.event.get():
@@ -71,7 +83,17 @@ if __name__ == "__main__":
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_x, mouse_y = event.pos
+
+                x, y = get_tile_clicked_coords(mouse_x, mouse_y, tile_size)
+
                 print(f"Mouse Click at ({mouse_x}, {mouse_y}) {get_tile_clicked_coords(mouse_x, mouse_y, tile_size)} ")
+
+                print(f"Tile ({x}, {y}) letter : {scrabble.get_tile_letter(x, y)}")
+
+                # if show_popup == False:
+                #     show_popup = True
+                # else:
+                #     show_popup = False 
         
         screen.fill(white)
 
@@ -93,6 +115,8 @@ if __name__ == "__main__":
             rect = surface.get_rect(center=((coord[0] * tile_size) + tile_size/2, (coord[1] * tile_size) + tile_size/2))
             screen.blit(surface, rect)
 
+        if show_popup:
+            pygame.draw.rect(screen, popup_color, popup_rect)
 
         # Update the display
         pygame.display.flip()
