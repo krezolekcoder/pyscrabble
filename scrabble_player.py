@@ -3,9 +3,10 @@
 
 class Player():
 
-    def __init__(self, letters:str):
+    def __init__(self, name:str, letters:str):
         self.score = 0
         self.letters = letters
+        self.name = name
     
     def get_letters(self) -> str:
         pass

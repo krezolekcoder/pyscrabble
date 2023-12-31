@@ -1,4 +1,5 @@
 from scrabble_engine import *
+from scrabble_player import *
 import pygame
 import sys
 
@@ -32,19 +33,34 @@ def create_word_surfaces(word: str, start_coord : tuple[int, int], heading:tuple
 
     return surfaces
 
+def create_player_letter_surfaces(letters: str) -> list:
+    surfaces = []
 
+    start_coord = (0, 15)
+    heading = (1, 0)
 
+    for idx, letter in enumerate(letters):
 
+        surface = font.render(letter, True, black)
+        
+        # x = start_coord[0] + idx * heading[0]
+        # y = start_coord[1] + idx * heading[1]
 
+        coord = (start_coord[0] + idx * heading[0] , start_coord[1] + idx * heading[1])
+        surfaces.append((surface, coord))
+
+    return surfaces
+
+PLAYER_LETTERS_OFFSET = 10
 
 if __name__ == "__main__":
 
     scrabble = ScrabbleGame('letters_PL.json')
-    
+    player = Player('Rocky', 'LITERY')
     # Initialize Pygame
     pygame.init()
 
-    width, height = 900, 900
+    width, height = 900, 1000
     # Set up display
     resolution = (width, height)
     screen = pygame.display.set_mode(resolution)
@@ -67,13 +83,6 @@ if __name__ == "__main__":
     word_surfaces = create_word_surfaces("SCRABBLE", (3,7), (1,0))
 
 
-    # popup rectangle with letters
-    popup_size = 200 
-    popup_color = (255, 0, 0)
-    popup_rect = pygame.Rect(0, 0, popup_size, popup_size)
-    popup_rect.center = screen.get_rect().center
-
-    show_popup = False
 
     # Game loop
     while True:
@@ -88,12 +97,8 @@ if __name__ == "__main__":
 
                 print(f"Mouse Click at ({mouse_x}, {mouse_y}) {get_tile_clicked_coords(mouse_x, mouse_y, tile_size)} ")
 
-                print(f"Tile ({x}, {y}) letter : {scrabble.get_tile_letter(x, y)}")
-
-                # if show_popup == False:
-                #     show_popup = True
-                # else:
-                #     show_popup = False 
+                if y < 15:
+                    print(f"Tile ({x}, {y}) letter : {scrabble.get_tile_letter(x, y)}")
         
         screen.fill(white)
 
@@ -107,16 +112,23 @@ if __name__ == "__main__":
                 
                 # Draw the tiles
                 pygame.draw.rect(screen, color, (x, y, tile_size, tile_size))
-                pygame.draw.rect(screen, black, (x, y, tile_size, tile_size), 1)  # 2 is the width of the border
+                pygame.draw.rect(screen, black, (x, y, tile_size, tile_size), 1)  # 1 is the width of the border
 
 
-        for surface, coord in word_surfaces:
-
-            rect = surface.get_rect(center=((coord[0] * tile_size) + tile_size/2, (coord[1] * tile_size) + tile_size/2))
+        for surface, (x, y) in word_surfaces:
+            rect = surface.get_rect(center=((x * tile_size) + tile_size/2, (y * tile_size) + tile_size/2))
             screen.blit(surface, rect)
 
-        if show_popup:
-            pygame.draw.rect(screen, popup_color, popup_rect)
+        # Update player
+            
+        player_letters = create_player_letter_surfaces(player.letters)
+        
+        for surface, coord in player_letters:
+            x, y = coord 
+
+            rect = surface.get_rect(center=((x * tile_size) + tile_size/2, (y * tile_size) + tile_size/2 + PLAYER_LETTERS_OFFSET))
+            pygame.draw.rect(screen, black, ((x * tile_size), (y * tile_size) + PLAYER_LETTERS_OFFSET, tile_size, tile_size), 1)  # 1 is the width of the border
+            screen.blit(surface, rect)
 
         # Update the display
         pygame.display.flip()
