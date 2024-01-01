@@ -1,6 +1,8 @@
 from board_config import *
 import pygame 
 
+
+
 class PlayerModel():
 
     def __init__(self, name:str, letters:str):
@@ -21,9 +23,9 @@ class PlayerModel():
     
     def get_letter_clicked(self):
 
-        for letter, clicked in self.letters:
+        for idx, (letter, clicked) in enumerate(self.letters):
             if clicked:
-                return letter
+                return (letter, idx)
         
 
     def get_letters(self) -> str:
@@ -37,6 +39,12 @@ class PlayerModel():
 
     def is_letter_clicked(self, letter_idx) -> bool:
         return self.letters[letter_idx][1]
+    
+    def remove_letter_at_idx(self, idx):
+        print(f'Remove at idx {idx}')
+        self.letters.pop(idx)
+
+
 
     
 class PlayerView():

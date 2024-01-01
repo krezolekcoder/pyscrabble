@@ -2,12 +2,51 @@ from board import BoardModel
 from player import PlayerModel
 from board_config import *
 
+STATE_LETTER_CHOOSE = "LETTER_CHOOSE"
+STATE_LETTER_CHOSEN = "LETTER_CHOSEN"
+STATE_LETTER_PLACED = "LETTER_PLACED"
+STATE_WORD_CHECK = "WORD_CHECK"
+
+
+class PlayerStateMachine:
+    def __init__(self, initial_state, player_model: PlayerModel, board_model: BoardModel):
+        self.player_model = player_model
+        self.board_model = board_model
+        self.current_state = initial_state
+
+        self.transitions = {
+            "LETTER_CHOOSE": self.handle_letter_choose, 
+            "LETTER_CHOSEN": self.handle_letter_chosen,
+            "LETTER_PLACED": self.handle_letter_placed
+        }
+
+    def transition(self, new_state):
+        print(f"Transitioning from {self.current_state} to {new_state}")
+        handler = self.transitions.get(new_state)
+        if handler:
+            handler()
+            self.current_state = new_state
+        else:
+            print(f"No transition handler found for state {new_state}")
+
+
+    def handle_letter_choose(self, x, y):
+        pass
+
+    def handle_letter_chosen(self):
+        pass
+
+    def handle_letter_placed(self):
+        pass
+
+
+
 class PlayerController:
 
     def __init__(self, player_model : PlayerModel, board_model : BoardModel):
         self.model = player_model
         self.board = board_model
-        self.state = "LETTER_CLICK_WAIT"
+        self.player_sm = PlayerStateMachine(STATE_LETTER_CHOOSE, self.model, self.board)
     
     def on_mouse_clicked(self, x :int, y:int):
     
@@ -18,20 +57,36 @@ class PlayerController:
     
         x,y = result
 
-        if self.state == "LETTER_CLICK_WAIT":
-            if y == 15 and x < len(self.model.get_letters()):
-                self.model.player_letter_clicked(x)
-                self.state = "BOARD_CLICK_WAIT"
+        if self.player_sm.current_state == STATE_LETTER_CHOOSE:
+            self.handle_letter_choose_state(x, y)
+        elif self.player_sm.current_state == STATE_LETTER_CHOSEN:
+            self.handle_letter_chosen_state(x, y)
+        elif self.player_sm.current_state == STATE_LETTER_PLACED:
+            self.handle_letter_placed(x, y)
+        else:
+            pass 
 
-        elif self.state == "BOARD_CLICK_WAIT":
-            if x >= 0 and x < 15 and y >= 0 and y < 15:
-                letter_clicked = self.model.get_letter_clicked()
-                
-                if self.board.set_tile_letter(x, y, letter_clicked):
-                    print(f"Tile {x} {y} letter {letter_clicked} ")
-                else:
-                    print(f"Tile occupied : letter {self.board.board[x][y]}")
+    def handle_letter_choose_state(self, x : int, y: int):
+        if y == 15 and x < len(self.model.get_letters()):
+            self.model.player_letter_clicked(x)
+            self.player_sm.current_state = STATE_LETTER_CHOSEN
 
+    def handle_letter_chosen_state(self, x: int, y:int):
+        letter, idx = self.model.get_letter_clicked()
+
+        if x >= 0 and x < 15 and y >= 0 and y < 15:
+            if self.board.set_tile_letter(x, y, letter):
+                self.model.remove_letter_at_idx(idx)
+                self.player_sm.current_state = STATE_LETTER_CHOOSE
+            else:
+                print(f"Tile occupied : letter {self.board.board[x][y]}")
+
+        elif y == 15 and x == idx:
+            self.model.player_letter_clicked(x)
+            self.player_sm.current_state = STATE_LETTER_CHOOSE
+
+    def handle_letter_placed_state(self, x: int, y:int):
+        pass
 
     def __get_tile_clicked_coords(self, x : int, y: int) -> (int, int) or None:
 

@@ -62,13 +62,6 @@ class BoardView:
                 # Draw the tiles
                 pygame.draw.rect(self.screen, color, (x, y, TILE_SIZE, TILE_SIZE))
                 pygame.draw.rect(self.screen, BLACK_COLOR, (x, y, TILE_SIZE, TILE_SIZE), 1)  # 1 is the width of the border
-
-
-        # word_surfaces = self.__create_word_surfaces("SCRABBLE", (3, 7), HEADING_RIGHT)
-
-        # for surface, (x, y) in word_surfaces:
-        #     rect = surface.get_rect(center=((x * TILE_SIZE) + TILE_SIZE/2, (y * TILE_SIZE) + TILE_SIZE/2))
-        #     self.screen.blit(surface, rect)
                 
         for surface, (x,y) in self.__create_letters_surfaces():
             rect = surface.get_rect(center=((x * TILE_SIZE) + TILE_SIZE/2, (y * TILE_SIZE) + TILE_SIZE/2))
@@ -91,24 +84,5 @@ class BoardView:
 
         return surfaces
 
-    def __create_word_surfaces(self, word: str, start_coord : tuple[int, int], heading:tuple[int, int]) -> list:
 
-        if 0 not in heading or (heading[0] > 1 or heading[1] > 1):
-                raise ValueError('Wrong heading')
-
-        surfaces = []
-
-        for idx, letter in enumerate(word):
-
-            surface = self.font.render(letter, True, BLACK_COLOR)
-            
-            x = start_coord[0] + idx * heading[0]
-            y = start_coord[1] + idx * heading[1]
-
-            if x >= 0 and x < 15 and y >= 0 and y < 15:
-                coord = (start_coord[0] + idx * heading[0] , start_coord[1] + idx * heading[1])
-                self.board_model.set_tile_letter(x, y, letter)
-                surfaces.append((surface, coord))
-
-        return surfaces
     

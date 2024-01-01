@@ -10,7 +10,7 @@ if __name__ == "__main__":
 
     scrabble = ScrabbleGame('letters_PL.json')
     board_model = BoardModel()
-    player_model = PlayerModel('Rocky', 'LITERY')
+    player_model = PlayerModel('Rocky', 'TALLIN')
     player_controller = PlayerController(player_model, board_model)
     board_view = BoardView(board_model, player_model)
 
@@ -24,9 +24,5 @@ if __name__ == "__main__":
                 mouse_x, mouse_y = event.pos
 
                 player_controller.on_mouse_clicked(mouse_x, mouse_y)
-                # x, y = get_tile_clicked_coords(mouse_x, mouse_y, tile_size)
-                # print(f"Mouse Click at ({mouse_x}, {mouse_y}) {get_tile_clicked_coords(mouse_x, mouse_y, tile_size)} ")
-                # if y < 15:
-                #     print(f"Tile ({x}, {y}) letter : {scrabble.get_tile_letter(x, y)}")
         
         board_view.draw()

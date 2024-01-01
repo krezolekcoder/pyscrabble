@@ -1,29 +1,25 @@
-from board import *
-from scrabble_engine import *
-import pygame
-import sys
+def remove_char_at_index(input_string, index):
+    # Convert the string to a list of characters
+    char_list = list(input_string)
 
+    # Check if the index is valid
+    if 0 <= index < len(char_list):
+        # Remove the character at the specified index
+        char_list.pop(index)
 
-if __name__ == "__main__":
+        # Join the list back into a string
+        result_string = ''.join(char_list)
 
-    scrabble = ScrabbleGame('letters_PL.json')
-    board_model = BoardModel()
-    player = PlayerModel('Rocky', 'LITERY')
+        return result_string
+    else:
+        print("Invalid index.")
+        return None
 
-    board_view = BoardView(board_model, player)
+# Example usage
+input_str = "example"
+index_to_remove = 2
+result = remove_char_at_index(input_str, index_to_remove)
 
-    # Game loop
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                mouse_x, mouse_y = event.pos
-
-                # x, y = get_tile_clicked_coords(mouse_x, mouse_y, tile_size)
-                # print(f"Mouse Click at ({mouse_x}, {mouse_y}) {get_tile_clicked_coords(mouse_x, mouse_y, tile_size)} ")
-                # if y < 15:
-                #     print(f"Tile ({x}, {y}) letter : {scrabble.get_tile_letter(x, y)}")
-        
-        board_view.draw()
+if result is not None:
+    print(f"Original string: {input_str}")
+    print(f"String after removing character at index {index_to_remove}: {result}")
