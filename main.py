@@ -9,9 +9,8 @@ if __name__ == "__main__":
 
     scrabble = ScrabbleGame('letters_PL.json')
     board_model = BoardModel()
-    player_controller = PlayerController()
     player = PlayerModel('Rocky', 'LITERY')
-
+    player_controller = PlayerController(player)
     board_view = BoardView(board_model, player)
 
     # Game loop

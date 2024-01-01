@@ -38,7 +38,7 @@ class BoardView:
         # Initialize Pygame
         pygame.init()
         # Set up display
-        self.screen = pygame.display.set_mode((BOARD_WIDTH, BOARD_HEIGHT))
+        self.screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
         
         pygame.display.set_caption("SCRABBLE")
 
