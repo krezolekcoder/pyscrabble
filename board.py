@@ -15,6 +15,10 @@ class BoardModel:
         if self.board[x_pos][y_pos] == None:
             self.board[x_pos][y_pos] = letter
             return True
+        
+    def reset_tile_letter(self, x_pos:int, y_pos:int):
+        self.board[x_pos][y_pos] = None 
+        
 
 
 class BoardView:
@@ -62,6 +66,13 @@ class BoardView:
                 # Draw the tiles
                 pygame.draw.rect(self.screen, color, (x, y, TILE_SIZE, TILE_SIZE))
                 pygame.draw.rect(self.screen, BLACK_COLOR, (x, y, TILE_SIZE, TILE_SIZE), 1)  # 1 is the width of the border
+
+        
+        pygame.draw.rect(self.screen, (0, 255, 0), (BUTTON_GREEN_COORDS[0], BUTTON_GREEN_COORDS[1], TILE_SIZE, TILE_SIZE))
+        pygame.draw.rect(self.screen, BLACK_COLOR, (BUTTON_GREEN_COORDS[0], BUTTON_GREEN_COORDS[1], TILE_SIZE, TILE_SIZE), 1)
+
+        pygame.draw.rect(self.screen, (255, 0, 0), (BUTTON_RED_COORDS[0], BUTTON_RED_COORDS[1], TILE_SIZE, TILE_SIZE))
+        pygame.draw.rect(self.screen, BLACK_COLOR, (BUTTON_RED_COORDS[0], BUTTON_RED_COORDS[1], TILE_SIZE, TILE_SIZE), 1)
                 
         for surface, (x,y) in self.__create_letters_surfaces():
             rect = surface.get_rect(center=((x * TILE_SIZE) + TILE_SIZE/2, (y * TILE_SIZE) + TILE_SIZE/2))

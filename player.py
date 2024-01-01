@@ -8,6 +8,7 @@ class PlayerModel():
     def __init__(self, name:str, letters:str):
         self.score = 0
         self.letters = [] 
+        self.current_word_letters = [] 
 
         for letter in letters:
             self.letters.append([letter, False])
@@ -20,13 +21,17 @@ class PlayerModel():
         else:
             self.letters[letter_idx][1] = True
 
+    def player_add_word_letter(self, letter, letter_coords: tuple[int, int]):
+        self.current_word_letters.append( (letter, letter_coords))
+
+    def player_add_hand_letter(self, letter):
+        self.letters.append([letter, False]) 
     
     def get_letter_clicked(self):
 
         for idx, (letter, clicked) in enumerate(self.letters):
             if clicked:
                 return (letter, idx)
-        
 
     def get_letters(self) -> str:
         
