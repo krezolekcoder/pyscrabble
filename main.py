@@ -1,5 +1,6 @@
 from board import *
 from player import *
+from controller import PlayerController
 from scrabble_engine import *
 import pygame
 import sys
@@ -9,9 +10,9 @@ if __name__ == "__main__":
 
     scrabble = ScrabbleGame('letters_PL.json')
     board_model = BoardModel()
-    player = PlayerModel('Rocky', 'LITERY')
-    player_controller = PlayerController(player)
-    board_view = BoardView(board_model, player)
+    player_model = PlayerModel('Rocky', 'LITERY')
+    player_controller = PlayerController(player_model, board_model)
+    board_view = BoardView(board_model, player_model)
 
     # Game loop
     while True:

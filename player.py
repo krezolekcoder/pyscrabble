@@ -1,8 +1,6 @@
 from board_config import *
 import pygame 
 
-
-
 class PlayerModel():
 
     def __init__(self, name:str, letters:str):
@@ -12,8 +10,6 @@ class PlayerModel():
         for letter in letters:
             self.letters.append([letter, False])
 
-        print(self.letters)
-        print(self.get_letters())
         self.name = name
 
     def player_letter_clicked(self, letter_idx):
@@ -23,6 +19,13 @@ class PlayerModel():
             self.letters[letter_idx][1] = True
 
     
+    def get_letter_clicked(self):
+
+        for letter, clicked in self.letters:
+            if clicked:
+                return letter
+        
+
     def get_letters(self) -> str:
         
         letters = []
@@ -35,34 +38,6 @@ class PlayerModel():
     def is_letter_clicked(self, letter_idx) -> bool:
         return self.letters[letter_idx][1]
 
-
-class PlayerController:
-
-    def __init__(self, player_model : PlayerModel):
-        self.model = player_model
-    
-    def on_mouse_clicked(self, x :int, y:int):
-
-        result = self.__get_tile_clicked_coords(x, y)
-
-        if result == None:
-            return
-        
-        x,y = result
-
-        if y == 15 and x < len(self.model.get_letters()):
-            self.model.player_letter_clicked(x)
-
-    def __get_tile_clicked_coords(self, x : int, y: int) -> (int, int) or None:
-
-        if y >= PLAYER_LETTERS_START_Y_COORD and x >= PLAYER_LETTERS_START_X_COORD:
-            return (int((x - PLAYER_LETTERS_START_X_COORD) // (TILE_SIZE)), 15)
-        
-        elif y >= 0 and y < BOARD_HEIGHT and x >= 0 and x < BOARD_WIDTH:
-            return ( int(x // (TILE_SIZE)), int(y // (TILE_SIZE)))
-        else:
-            return None
-     
     
 class PlayerView():
 

@@ -20,7 +20,8 @@ class BoardModel:
 class BoardView:
     def __init__(self, model : BoardModel, player: PlayerModel):
         
-        self.model = model
+        self.board_model = model
+        self.player = player 
         self.color_matrix = [[TILE_DEFAULT_COLOR for _ in range(BOARD_TILE_CNT)] for _ in range(BOARD_TILE_CNT)]
         
         for coord in TRIPLE_WORD_SCORE_COORDS:
@@ -44,7 +45,6 @@ class BoardView:
 
         self.font = pygame.font.Font(None, FONT_SIZE)
 
-        self.player = player 
         self.player_view = PlayerView(self.player, self.screen)
 
 
@@ -63,15 +63,33 @@ class BoardView:
                 pygame.draw.rect(self.screen, color, (x, y, TILE_SIZE, TILE_SIZE))
                 pygame.draw.rect(self.screen, BLACK_COLOR, (x, y, TILE_SIZE, TILE_SIZE), 1)  # 1 is the width of the border
 
-        word_surfaces = self.__create_word_surfaces("SCRABBLE", (3, 7), HEADING_RIGHT)
 
-        for surface, (x, y) in word_surfaces:
+        # word_surfaces = self.__create_word_surfaces("SCRABBLE", (3, 7), HEADING_RIGHT)
+
+        # for surface, (x, y) in word_surfaces:
+        #     rect = surface.get_rect(center=((x * TILE_SIZE) + TILE_SIZE/2, (y * TILE_SIZE) + TILE_SIZE/2))
+        #     self.screen.blit(surface, rect)
+                
+        for surface, (x,y) in self.__create_letters_surfaces():
             rect = surface.get_rect(center=((x * TILE_SIZE) + TILE_SIZE/2, (y * TILE_SIZE) + TILE_SIZE/2))
-            self.screen.blit(surface, rect)
+            self.screen.blit(surface, rect) 
 
         self.player_view.draw()
 
         pygame.display.flip()
+
+    def __create_letters_surfaces(self) -> list:
+        
+        surfaces = []
+
+        # for coord, letter in self.board_model.board
+        for x, row in enumerate(self.board_model.board):
+            for y, element in enumerate(row):
+                if element != None:
+                    surface = self.font.render(element, True, BLACK_COLOR)
+                    surfaces.append((surface, (x, y)))
+
+        return surfaces
 
     def __create_word_surfaces(self, word: str, start_coord : tuple[int, int], heading:tuple[int, int]) -> list:
 
@@ -89,7 +107,7 @@ class BoardView:
 
             if x >= 0 and x < 15 and y >= 0 and y < 15:
                 coord = (start_coord[0] + idx * heading[0] , start_coord[1] + idx * heading[1])
-                self.model.set_tile_letter(x, y, letter)
+                self.board_model.set_tile_letter(x, y, letter)
                 surfaces.append((surface, coord))
 
         return surfaces
