@@ -4,8 +4,7 @@ from board_config import *
 
 STATE_LETTER_CHOOSE = "LETTER_CHOOSE"
 STATE_LETTER_CHOSEN = "LETTER_CHOSEN"
-STATE_LETTER_PLACED = "LETTER_PLACED"
-STATE_WORD_CHECK = "WORD_CHECK"
+STATE_WORD_PLACED = "WORD_PLACED"
 
 
 class PlayerStateMachine:
@@ -61,7 +60,7 @@ class PlayerController:
             self.handle_letter_choose_state(x, y)
         elif self.player_sm.current_state == STATE_LETTER_CHOSEN:
             self.handle_letter_chosen_state(x, y)
-        elif self.player_sm.current_state == STATE_LETTER_PLACED:
+        elif self.player_sm.current_state == STATE_WORD_PLACED:
             self.handle_word_placed_state(x, y)
         else:
             pass 
@@ -80,10 +79,11 @@ class PlayerController:
         
         elif x == BUTTON_GREEN[0] and y == BUTTON_GREEN[1] and len(self.model.current_word_letters) >= 2:
             print(f'Word proposed : {self.model.current_word_letters}')
-            self.player_sm.current_state = STATE_LETTER_PLACED
+            self.player_sm.current_state = STATE_WORD_PLACED
 
     def handle_letter_chosen_state(self, x: int, y:int):
         letter, idx = self.model.get_letter_clicked()
+
 
         if x >= 0 and x < 15 and y >= 0 and y < 15:
             if self.board.set_tile_letter(x, y, letter):
@@ -96,6 +96,9 @@ class PlayerController:
         elif y == 15 and x == idx:
             self.model.player_letter_clicked(x)
             self.player_sm.current_state = STATE_LETTER_CHOOSE
+
+        print(self.model.current_word_letters)
+
 
     def handle_word_placed_state(self, x: int, y:int):
         
@@ -113,4 +116,4 @@ class PlayerController:
             return ( int(x // (TILE_SIZE)), int(y // (TILE_SIZE)))
         else:
             return None
-     
+

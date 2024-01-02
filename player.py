@@ -1,19 +1,21 @@
 from board_config import *
 import pygame 
 
-
+WORD_HEADING_NONE = (0, 0)
 
 class PlayerModel():
 
     def __init__(self, name:str, letters:str):
         self.score = 0
         self.letters = [] 
-        self.current_word_letters = [] 
+        self.current_word_letters = []
+        self.current_word_heading = WORD_HEADING_NONE
 
         for letter in letters:
             self.letters.append([letter, False])
 
         self.name = name
+        self.words_placed = [] 
 
     def player_letter_clicked(self, letter_idx):
         if self.letters[letter_idx][1]:
@@ -21,8 +23,33 @@ class PlayerModel():
         else:
             self.letters[letter_idx][1] = True
 
-    def player_add_word_letter(self, letter, letter_coords: tuple[int, int]):
-        self.current_word_letters.append( (letter, letter_coords))
+    def player_add_word_letter(self, letter, letter_coords: tuple[int, int]) -> bool :
+
+        current_word_len = len(self.current_word_letters)
+
+        if current_word_len == 0:
+            self.current_word_letters.append((letter, letter_coords))
+            return True
+        elif current_word_len == 1:
+            
+            first_letter_x, first_letter_y = self.current_word_letters[0][1]
+            second_letter_x, second_letter_y = letter_coords
+
+            x = second_letter_x - first_letter_x
+            y = second_letter_y - first_letter_y
+
+            heading = (x, y)
+
+            print(heading)
+
+            if 0 not in heading or (heading[0] > 1 or heading[1] > 1) or(heading[0] < -1 or heading[1] < -1):
+                return False 
+            
+            self.current_word_heading = heading
+            return True 
+        
+        
+
 
     def player_add_hand_letter(self, letter):
         self.letters.append([letter, False]) 
@@ -48,6 +75,9 @@ class PlayerModel():
     def remove_letter_at_idx(self, idx):
         print(f'Remove at idx {idx}')
         self.letters.pop(idx)
+
+    def add_word_placed(self, word , start_coord, heading):
+        self.words_placed.append((word, start_coord, heading))
 
 
 
