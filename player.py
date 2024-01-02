@@ -40,14 +40,29 @@ class PlayerModel():
 
             heading = (x, y)
 
-            print(heading)
-
             if 0 not in heading or (heading[0] > 1 or heading[1] > 1) or(heading[0] < -1 or heading[1] < -1):
                 return False 
             
             self.current_word_heading = heading
+            self.current_word_letters.append((letter, letter_coords))
+
             return True 
-        
+        else:
+            
+            new_x, new_y = letter_coords
+
+            last_x, last_y = self.current_word_letters[-1][1]
+
+            heading_x, heading_y = self.current_word_heading 
+
+            corrext_x, correct_y = last_x + heading_x , last_y + heading_y
+
+            if new_x == corrext_x and new_y == correct_y:
+                self.current_word_letters.append((letter, letter_coords))
+                return True
+            else:
+                return False
+
         
 
 

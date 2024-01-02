@@ -86,10 +86,12 @@ class PlayerController:
 
 
         if x >= 0 and x < 15 and y >= 0 and y < 15:
-            if self.board.set_tile_letter(x, y, letter):
-                self.model.remove_letter_at_idx(idx)
-                self.model.player_add_word_letter(letter, (x, y))
-                self.player_sm.current_state = STATE_LETTER_CHOOSE
+            if self.model.player_add_word_letter(letter, (x, y)) :
+                if self.board.set_tile_letter(x, y, letter):
+                    self.model.remove_letter_at_idx(idx)
+                    self.player_sm.current_state = STATE_LETTER_CHOOSE
+                else:
+                    print('Wrong tile ')
             else:
                 print(f"Tile occupied : letter {self.board.board[x][y]}")
 
