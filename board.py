@@ -80,6 +80,7 @@ class BoardView:
 
         self.player_view.draw()
 
+
         pygame.display.flip()
 
     def __create_letters_surfaces(self) -> list:

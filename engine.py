@@ -7,10 +7,15 @@ MAX_LETTERS_CNT = 7
  
 class Engine():
 
-    def __init__(self, json_config_path : str):
+    def __init__(self, json_config_path : str, dictionary_txt_path: str):
         with open(json_config_path, 'r', encoding='utf-8') as file:
             # Load the JSON data
             self.config = json.load(file)
+
+        with open(dictionary_txt_path, 'r', encoding='utf-8') as file:
+            self.dictionary = [line.strip() for line in file]
+
+        self.dictionary = set(self.dictionary)
 
         self.letters = [] 
 
@@ -69,6 +74,9 @@ class Engine():
             self.letters.remove(item)
         
         return random_letters 
+    
+    def is_word_in_dictionary(self, word:str) -> bool:
+        return word.lower() in self.dictionary
 
 
     def __get_list_of_coords(self, word: str, start_coord: tuple[int, int], heading: tuple[int, int]):

@@ -8,7 +8,9 @@ import sys
 
 if __name__ == "__main__":
 
-    scrabble_engine = Engine('letters_PL.json')
+    dictionary_path = sys.argv[1]
+
+    scrabble_engine = Engine('letters_PL.json', 'dictionary_PL.txt')
     board_model = BoardModel()
     player_model = PlayerModel('Rocky', scrabble_engine.get_letters(7))
     player_controller = PlayerController(player_model, board_model, scrabble_engine)

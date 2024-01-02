@@ -10,35 +10,7 @@ STATE_WORD_PLACED = "WORD_PLACED"
 
 class PlayerStateMachine:
     def __init__(self, initial_state, player_model: PlayerModel, board_model: BoardModel):
-        self.player_model = player_model
-        self.board_model = board_model
         self.current_state = initial_state
-
-        self.transitions = {
-            "LETTER_CHOOSE": self.handle_letter_choose, 
-            "LETTER_CHOSEN": self.handle_letter_chosen,
-            "LETTER_PLACED": self.handle_letter_placed
-        }
-
-    def transition(self, new_state):
-        print(f"Transitioning from {self.current_state} to {new_state}")
-        handler = self.transitions.get(new_state)
-        if handler:
-            handler()
-            self.current_state = new_state
-        else:
-            print(f"No transition handler found for state {new_state}")
-
-
-    def handle_letter_choose(self, x, y):
-        pass
-
-    def handle_letter_chosen(self):
-        pass
-
-    def handle_letter_placed(self):
-        pass
-
 
 
 class PlayerController:

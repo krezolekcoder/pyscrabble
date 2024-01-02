@@ -48,13 +48,9 @@ class PlayerModel():
 
             return True 
         else:
-            
             new_x, new_y = letter_coords
-
             last_x, last_y = self.current_word_letters[-1][1]
-
             heading_x, heading_y = self.current_word_heading 
-
             corrext_x, correct_y = last_x + heading_x , last_y + heading_y
 
             if new_x == corrext_x and new_y == correct_y:
@@ -93,6 +89,9 @@ class PlayerModel():
 
     def add_word_placed(self, word , start_coord, heading):
         self.words_placed.append((word, start_coord, heading))
+
+    def update_score(self, points:int):
+        self.score += points
 
 
 
