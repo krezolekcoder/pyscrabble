@@ -1,15 +1,23 @@
 import numpy as np
 import json
 from board_config import TRIPLE_WORD_SCORE_COORDS, TRIPLE_LETTER_SCORE_COORDS, DOUBLE_LETTER_SCORE_COORDS, DOUBLE_WORD_SCORE_COORDS
+import random 
 
+MAX_LETTERS_CNT = 7
  
-class ScrabbleGame():
+class Engine():
 
     def __init__(self, json_config_path : str):
         with open(json_config_path, 'r', encoding='utf-8') as file:
             # Load the JSON data
             self.config = json.load(file)
 
+        self.letters = [] 
+
+        for key, value in self.config['tiles_cnt'].items():
+            for _ in range (0, value):
+                self.letters.append(key)
+        
         self.score_mult = [[("N", 1) for _ in range(15)] for _ in range(15)]
         self.board = [[None for _ in range(15)] for _ in range(15)]
 
@@ -49,6 +57,19 @@ class ScrabbleGame():
             score *= mult
 
         return score
+
+    def get_letters(self, cnt: int) -> bool:
+        
+        if cnt > MAX_LETTERS_CNT or cnt >= len(self.letters):
+            return False 
+        
+        random_letters = random.sample(self.letters, cnt)
+
+        for item in random_letters:
+            self.letters.remove(item)
+        
+        return random_letters 
+
 
     def __get_list_of_coords(self, word: str, start_coord: tuple[int, int], heading: tuple[int, int]):
         

@@ -128,7 +128,6 @@ class PlayerView():
         x, y = (0, 15)
 
         for idx, letter in enumerate(letters):
-    
             surface = self.font.render(letter, True, BLACK_COLOR)
 
             coord = (x + idx * HEADING_RIGHT[0] , y + idx * HEADING_RIGHT[1])

@@ -1,17 +1,17 @@
 from board import *
 from player import *
 from controller import PlayerController
-from scrabble_engine import *
+from engine import *
 import pygame
 import sys
 
 
 if __name__ == "__main__":
 
-    scrabble = ScrabbleGame('letters_PL.json')
+    scrabble_engine = Engine('letters_PL.json')
     board_model = BoardModel()
-    player_model = PlayerModel('Rocky', 'TALLIN')
-    player_controller = PlayerController(player_model, board_model)
+    player_model = PlayerModel('Rocky', scrabble_engine.get_letters(7))
+    player_controller = PlayerController(player_model, board_model, scrabble_engine)
     board_view = BoardView(board_model, player_model)
 
     # Game loop

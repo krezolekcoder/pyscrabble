@@ -1,6 +1,7 @@
 from board import BoardModel
 from player import PlayerModel
 from board_config import *
+from engine import Engine
 
 STATE_LETTER_CHOOSE = "LETTER_CHOOSE"
 STATE_LETTER_CHOSEN = "LETTER_CHOSEN"
@@ -42,11 +43,12 @@ class PlayerStateMachine:
 
 class PlayerController:
 
-    def __init__(self, player_model : PlayerModel, board_model : BoardModel):
+    def __init__(self, player_model : PlayerModel, board_model : BoardModel, scrabble_engine : Engine):
         self.model = player_model
         self.board = board_model
         self.player_sm = PlayerStateMachine(STATE_LETTER_CHOOSE, self.model, self.board)
-    
+        self.engine = scrabble_engine
+
     def on_mouse_clicked(self, x :int, y:int):
         
         result = self.__get_tile_clicked_coords(x, y)
@@ -84,22 +86,15 @@ class PlayerController:
     def handle_letter_chosen_state(self, x: int, y:int):
         letter, idx = self.model.get_letter_clicked()
 
-
         if x >= 0 and x < 15 and y >= 0 and y < 15:
             if self.model.player_add_word_letter(letter, (x, y)) :
                 if self.board.set_tile_letter(x, y, letter):
                     self.model.remove_letter_at_idx(idx)
                     self.player_sm.current_state = STATE_LETTER_CHOOSE
-                else:
-                    print('Wrong tile ')
-            else:
-                print(f"Tile occupied : letter {self.board.board[x][y]}")
 
         elif y == 15 and x == idx:
             self.model.player_letter_clicked(x)
             self.player_sm.current_state = STATE_LETTER_CHOOSE
-
-        print(self.model.current_word_letters)
 
 
     def handle_word_placed_state(self, x: int, y:int):
@@ -107,6 +102,14 @@ class PlayerController:
         print(f'Word placed! ')
 
         self.player_sm.current_state = STATE_LETTER_CHOOSE
+
+        letters_to_get = 7 - len(self.model.letters)
+
+        new_letters = self.engine.get_letters(letters_to_get)
+
+        for letter in new_letters:
+            self.model.player_add_hand_letter(letter)
+        
         self.model.current_word_letters = []
 
     
